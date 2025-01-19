@@ -217,4 +217,6 @@ with tab_Cornish:
     st.latex(r"z_{\alpha}^{CF} \approx z_{\alpha} + \frac{(z_{\alpha}^2 - 1) S}{6} +"
              r" \frac{(z_{\alpha}^3 - 3z_{\alpha}) (K-3)}{24} - \frac{(2z_{\alpha}^3 - 5z_{\alpha}) S^2}{36}")
 
-    st.write(f"VAR: {utils.cornish_fisher_var_es(mean, vol**2, conf, skew, kur)[0]}")
+    st.latex(r"VaR = \mu + z_{\alpha}^{CF} \sigma")
+
+    st.latex(rf"VaR({conf}%): {utils.cornish_fisher_var_es(mean, vol**2, conf, skew, kur)[0]}")

@@ -4,7 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 
-tab_Credit_loss_computation, tab_merton = st.tabs(["Credit loss computation", "Merton's model"])
+tab_Credit_loss_computation, tab_merton, tab_altman = st.tabs(["Credit loss computation",
+                                                               "Merton's model",
+                                                               "Altman z-score"])
 
 with tab_Credit_loss_computation:
     with st.expander("Credit loss computation of 2 independent assets"):
@@ -82,3 +84,43 @@ with tab_merton:
         asset_volatility = st.number_input("Annual asset volatility", min_value=0.0, max_value=1.0, value=0.2, key="asset_volatility_dd")
         DD = (np.log(asset_value) - np.log(bond_face_value) + (rf - 0.5 * asset_volatility**2) * bond_face_date) / (asset_volatility * np.sqrt(bond_face_date))
         st.latex(f"DD = {DD:.8f}")
+
+with tab_altman:
+    # Explanation
+    st.markdown(r"""
+    Altman (1968)'s Z-score is a financial model used to predict the likelihood of bankruptcy for a company.
+    The formula is:
+
+    $$
+    Z = 1.2X_1 + 1.4X_2 + 3.3X_3 + 0.6X_4 + 0.999X_5
+    $$
+
+    Where:
+    $$
+    \begin{align*}
+    X_1 &= \frac{\text{Working Capital}}{\text{Total Assets}}\\
+    X_2 &= \frac{\text{Retained Earnings}}{\text{Total Assets}}\\
+    X_3 &= \frac{\text{EBIT}}{\text{Total Assets}}\\
+    X_4 &= \frac{\text{Market Value of Equity}}{\text{Total Liabilities}}\\
+    X_5 &= \frac{\text{Sales}}{\text{Total Assets}}\\
+    \end{align*}
+    $$
+    """)
+
+    wc_ = st.number_input("Working Capital", min_value=0.0, max_value=10000000000.0, value=100.0)
+    re_ = st.number_input("Retained Earnings", min_value=0.0, max_value=10000000000.0, value=100.0)
+    ebit_ = st.number_input("EBIT", min_value=0.0, max_value=10000000000.0, value=100.0)
+    mve_ = st.number_input("Market Value of Equity", min_value=0.0, max_value=10000000000.0, value=100.0)
+    sales_ = st.number_input("Sales", min_value=0.0, max_value=10000000000.0, value=100.0)
+    total_lia_ = st.number_input("Total Liabilities", min_value=0.0, max_value=10000000000.0, value=100.0)
+    total_assets_ = st.number_input("Total Assets", min_value=0.0, max_value=10000000000.0, value=100.0)
+
+    X1 = wc_ / total_assets_
+    X2 = re_ / total_assets_
+    X3 = ebit_ / total_assets_
+    X4 = mve_ / total_lia_
+    X5 = sales_ / total_assets_
+
+    Z = 1.2*X1 + 1.4*X2 + 3.3*X3 + 0.6*X4 + 0.999*X5
+
+    st.latex(f"Z = {Z:.8f}")
