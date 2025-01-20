@@ -3,10 +3,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import ast
+import math
 
-tab_Credit_loss_computation, tab_merton, tab_altman = st.tabs(["Credit loss computation",
+tab_Credit_loss_computation, tab_merton, tab_altman, tab_def_prob = st.tabs(["Credit loss computation",
                                                                "Merton's model",
-                                                               "Altman z-score"])
+                                                               "Altman z-score",
+                                                               "Default Probability"])
 
 with tab_Credit_loss_computation:
     with st.expander("Credit loss computation of 2 independent assets"):
@@ -129,3 +132,47 @@ with tab_altman:
     st.latex(r'''2.7 \geq Z \leq 3.0: \text{Company is on alert}''')
     st.latex(r'''1.8 \geq Z \leq 2.7: \text{Company has a certain risk to default}''')
     st.latex(r'''Z < 1.8: \text{Company defaults with a very high likelihood}''')
+
+with tab_def_prob:
+    with st.expander("Default probability from cumulative probability of default"):
+        # Input array as a string
+        array_str = st.text_input("Enter the cumulative probability of default as an array (e.g., [1, 2, 3])")
+        array = [0.1, 0.2, 0.3]
+
+        if array_str:
+            try:
+                # Safely evaluate the input string as a Python literal
+                array = ast.literal_eval(array_str)
+                if isinstance(array, list):
+                    st.write("You entered the array:", array)
+                else:
+                    st.error("Input is not a valid array!")
+            except Exception as e:
+                st.error(f"Invalid input: {e}")
+
+        # Sort the array
+        array = np.array(array)
+
+        print(array)
+
+        dt = st.number_input("Default time", min_value=0, max_value=100, value=1)
+        upto = st.number_input("Conditional up to time: ", min_value=0, max_value=100, value=1)
+
+        # Bond unconditional default probability
+        st.write("Bond unconditional default probability:")
+        st.latex(rf"P(D)_t = {array[dt-1]-array[dt-2]:.8f}")
+        st.write("Bond conditional default probability:")
+        st.latex(rf"P(D|T)_t = {(array[dt-1]-array[upto-1])/(1 - array[upto-1]):.8f}")
+
+    with st.expander("Probability of several defaults"):
+        nb_def = st.number_input("Number of defaults", min_value=0, max_value=100, value=1)
+        p_def = st.number_input("Probability of default", min_value=0.0, max_value=1.0, value=0.01)
+        nb_loans = st.number_input("Number of loans (or other instruments)", min_value=0, max_value=100, value=100)
+
+        # Poisson law
+        poisson = stats.poisson.pmf(nb_def, nb_loans * p_def)
+        poisson_2 = (math.factorial(nb_loans) / (math.factorial(nb_def) * math.factorial(nb_loans - nb_def))) * (p_def ** nb_def) * ((1 - p_def) ** (nb_loans - nb_def))
+
+        st.latex(f"P(X = {nb_def}) = {poisson_2:.8f}")
+
+
