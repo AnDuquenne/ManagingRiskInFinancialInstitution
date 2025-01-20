@@ -219,4 +219,4 @@ with tab_Cornish:
 
     st.latex(r"VaR = \mu + z_{\alpha}^{CF} \sigma")
 
-    st.latex(rf"VaR({conf}%): {utils.cornish_fisher_var_es(mean, vol**2, conf, skew, kur)[0]}")
+    st.latex(rf"VaR({conf}): {utils.cornish_fisher_var_es(mean, vol**2, conf, skew, kur)[0]}")
