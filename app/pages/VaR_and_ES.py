@@ -135,10 +135,11 @@ with tab_gaussian:
                 "remains the same for every period but are independent")
     # Gaussian distribution
     volatility = st.number_input("Volatility", min_value=0.0, max_value=1000000000.0, value=1.0)
-    mean = st.number_input("Mean", min_value=-100.0, max_value=1000000000.0, value=0.0)
+    mean_ = st.number_input("Mean", min_value=-100.0, max_value=1000000000.0, value=0.0)
     time = st.number_input("Time in units of time", min_value=0, max_value=100, value=1)
 
-    mean = mean * time
+    mean = mean_ * time
+    mean_sqrt = mean_ * np.sqrt(time)
     volatility = volatility * np.sqrt(time)
 
     x = np.linspace(mean-3*volatility, mean+3*volatility, 100000)
@@ -156,6 +157,7 @@ with tab_gaussian:
     prob_conf = cdf[index_x_geq_conf[-1]]
 
     VaR, ES = utils.calculate_var_es(mean, volatility**2, var_conf)
+    Var_sqrt, ES_sqrt = utils.calculate_var_es(mean_sqrt, volatility**2, var_conf)
 
     # Create the plot
     fig, ax = plt.subplots()
@@ -163,7 +165,9 @@ with tab_gaussian:
     ax.plot(x, y, color="white", label="Line Chart")  # Line chart with white color
     ax.fill_between(x[index_x_geq_conf], y[index_x_geq_conf], alpha=0.3, color="red",
                     label=f"VaR = {np.round(VaR, 2)}\n"
-                          f"ES = {np.round(ES, 2)}")
+                          f"VaR sqrt = {np.round(Var_sqrt, 2)}\n"
+                          f"ES = {np.round(ES, 2)}\n"
+                          f"ES sqrt = {np.round(ES_sqrt, 2)}")
 
     # Set tick params to white
     ax.tick_params(colors="white")
@@ -188,7 +192,9 @@ with tab_gaussian:
     ax.plot(x, cdf, color="white", label="Line Chart")  # Line chart with white color
     ax.fill_between(x[index_x_geq_conf], cdf[index_x_geq_conf], alpha=0.3, color="red",
                     label=f"VaR = {np.round(VaR, 2)}\n"
-                          f"ES = {np.round(ES, 2)}")
+                          f"VaR sqrt = {np.round(Var_sqrt, 2)}\n"
+                          f"ES = {np.round(ES, 2)}\n"
+                          f"ES sqrt = {np.round(ES_sqrt, 2)}")
 
     # Set tick params to white
     ax.tick_params(colors="white")
