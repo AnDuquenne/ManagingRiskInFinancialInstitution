@@ -3,10 +3,39 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import ast
 
 st.header("Volatility Modelling")
 
-tab_EWMA, tab_Garch = st.tabs(["EWMA", "Garch(1, 1) model"])
+tab_autocorr, tab_EWMA, tab_Garch = st.tabs(["Autocorrelation", "EWMA", "Garch(1, 1) model"])
+
+with tab_autocorr:
+    # Input array as a string
+    array_str = st.text_input("Enter an array (e.g., [1, 2, 3])")
+    lag = st.number_input("Lag", min_value=0, max_value=100, value=1)
+    array = [1, 2, 3]
+
+    if array_str:
+        try:
+            # Safely evaluate the input string as a Python literal
+            array = ast.literal_eval(array_str)
+            if isinstance(array, list):
+                st.write("You entered the array:", array)
+            else:
+                st.error("Input is not a valid array!")
+        except Exception as e:
+            st.error(f"Invalid input: {e}")
+
+    assert lag < len(array), "The lag should be less than the length of the array"
+
+    array = np.array(array)
+    # Compute the autocorrelation
+    if lag == 0:
+        autocorr = np.corrcoef(array, array)[0, 1]
+    else:
+        autocorr = np.corrcoef(array[:-lag], array[lag:])[0, 1]
+
+    st.latex(rf"\rho_{lag} = {autocorr:.8f}")
 
 with tab_EWMA:
     st.html(r'<h2>Exponentially Weighted Moving Average</h2>')

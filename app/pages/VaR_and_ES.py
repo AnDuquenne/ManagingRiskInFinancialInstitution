@@ -64,11 +64,11 @@ with tab_binomial:
     st.text('We compute the VAR and ES of 2 assets given their binomial distributions.'
             'If using only one asset, set the gain and loss of the second one to 0.')
     p_1Loss = st.number_input("Asset 1 probability of loss", min_value=0.0, max_value=1.0, value=0.5)
-    Loss1 = st.number_input("Asset 1 Loss", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
-    Gain1 = st.number_input("Asset 1 Gain", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
+    Loss1 = st.number_input("Asset 1 Loss (Losses require a [-] sign ! )", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
+    Gain1 = st.number_input("Asset 1 Gain (Losses require a [-] sign ! )", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
     p_2Loss = st.number_input("Asset 2 probability of loss", min_value=0.0, max_value=1.0, value=0.5)
-    Loss2 = st.number_input("Asset 2 Loss", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
-    Gain2 = st.number_input("Asset 2 Gain", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
+    Loss2 = st.number_input("Asset 2 Loss (Losses require a [-] sign ! )", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
+    Gain2 = st.number_input("Asset 2 Gain (Losses require a [-] sign ! )", min_value=-1000000000.0, max_value=1000000000.0, value=1.0)
     Confidence = st.number_input("Confidence level", min_value=0.0, max_value=1.0, value=0.95, key="conf_binomial")
     # Calculate probabilities
     p_L1 = p_1Loss
