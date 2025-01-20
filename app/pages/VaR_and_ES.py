@@ -133,6 +133,7 @@ with tab_binomial:
 with tab_gaussian:
     st.markdown("We suppose that the returns of an asset follow a Gaussian distribution. This distribution "
                 "remains the same for every period but are independent")
+    st.markdown("VaR_sqrt is the result with the teacher's formula, VaR my results by modifying the original distribution.")
     # Gaussian distribution
     volatility = st.number_input("Volatility", min_value=0.0, max_value=1000000000.0, value=1.0)
     mean_ = st.number_input("Mean", min_value=-100.0, max_value=1000000000.0, value=0.0)
