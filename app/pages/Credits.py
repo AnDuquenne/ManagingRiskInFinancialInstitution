@@ -124,3 +124,8 @@ with tab_altman:
     Z = 1.2*X1 + 1.4*X2 + 3.3*X3 + 0.6*X4 + 0.999*X5
 
     st.latex(f"Z = {Z:.8f}")
+
+    st.latex(r'''Z > 3: \text{Company is unlikely to default}''')
+    st.latex(r'''2.7 \geq Z \leq 3.0: \text{Company is on alert}''')
+    st.latex(r'''1.8 \geq Z \leq 2.7: \text{Company has a certain risk to default}''')
+    st.latex(r'''Z < 1.8: \text{Company defaults with a very high likelihood}''')
