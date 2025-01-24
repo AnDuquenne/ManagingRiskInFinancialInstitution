@@ -68,3 +68,16 @@ def cornish_fisher_var_es(mean, variance, confidence_level, skewness, kurtosis):
     es = mean - (std_dev * pdf_alpha / cdf_alpha)
 
     return var, es
+
+def copula(U_1, U_2, theta_1, theta_2):
+    return min((U_1**(1-theta_1))*U_2, (U_2**(1-theta_2))*U_1)
+
+
+for u in np.linspace(0, 1, 50):
+       for t1 in np.linspace(0, 1, 50):
+            for t2 in np.linspace(0, 1, 50):
+                if t1 > t2:
+                    c = copula(1, u, t1, t2)
+                    if c != u:
+                        print(f"diff 0:{c}, u:{u}")
+

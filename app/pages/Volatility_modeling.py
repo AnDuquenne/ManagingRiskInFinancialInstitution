@@ -32,10 +32,14 @@ with tab_autocorr:
     # Compute the autocorrelation
     if lag == 0:
         autocorr = np.corrcoef(array, array)[0, 1]
+        autocov = np.cov(array, array)[0, 1]
     else:
         autocorr = np.corrcoef(array[:-lag], array[lag:])[0, 1]
+        autocov = np.cov(array[:-lag], array[lag:])[0, 1]
+        # [0.011, 0.018, 0.023, -0.0322, -0.0232, -0.0456, -0.0011, 0.0122, 0.0022, 0.045, 0.0211, 0.0333]
 
     st.latex(rf"\rho_{lag} = {autocorr:.8f}")
+    st.latex(rf"cov_{lag} = {autocov:.8f}")
 
 with tab_EWMA:
     st.html(r'<h2>Exponentially Weighted Moving Average</h2>')
@@ -110,6 +114,7 @@ with tab_Garch:
         st.latex(rf'\sigma = {sigma_t_squared**(1/2)*100:.2f}\%')
 
     with st.expander("Multi-period volatility forecast"):
+        st.text("If asked to compute the volatility to price an option, we should use the annualized volatility")
         w_multi = st.number_input("w", min_value=0.0, max_value=100.0, value=1.0, key="w_multi")
         alpha_multi = st.number_input("alpha", min_value=0.0, max_value=1.0, value=0.1, key="alpha_multi")
         beta_multi = st.number_input("beta", min_value=0.0, max_value=1.0, value=0.1, key="beta_multi")
